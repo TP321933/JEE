@@ -5,8 +5,8 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-
-import com.mysql.jdbc.ResultSetMetaData;
+import java.sql.ResultSetMetaData;
+import java.sql.*;
 
 public class ColumnDetails {
 	
@@ -24,8 +24,22 @@ public class ColumnDetails {
 		Statement stat = connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		ResultSet rs = stat.executeQuery("SELECT * FROM book");
 		
-		DatabaseMetaData col = connect.getMetaData();
-		ResultSet rst = col.getColumns(null,null, "book", null);
+		ResultSetMetaData col = rs.getMetaData();
+		int colcount = col.getColumnCount();
+		System.out.println(colcount);
+		for(int i=1; i<=colcount; i++) {
+			
+			String colnum = col.getColumnLabel(i);
+			System.out.println(colnum);
+			String name = col.getColumnName(i);
+			String type = col.getColumnTypeName(i);
+			int width = col.getColumnDisplaySize(i);
+			System.out.println("COLUMN NAME: " + name + " COLUMN TYPE: " + type + " COLUMN WIDTH: " + width);
+		}
+		
+		connect.close();
+		
+		/*ResultSet rst = col.getColumns(null,null, "book", null);
 		
 		if(rs!=null) {
 			while(rst.next()) {
@@ -34,7 +48,7 @@ public class ColumnDetails {
 			    int size = rs.getInt("COLUMN_SIZE");
 			    System.out.println(name + type + size);
 			}
-		}
+		}*/
 		
 		
 	}
